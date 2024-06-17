@@ -1,0 +1,49 @@
+<!-- recipes/templates/base_generic.html -->
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Recipe Sharing Site{% endblock %}</title>
+
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="container">
+                <a href="{% url 'home' %}" class="logo">Recipe Sharing Site</a>
+                <ul class="nav-menu">
+                <li><a href="{% url 'home' %}">Home</a></li>
+                <li><a href="{% url 'search_recipes' %}">Search Recipes</a></li>
+                <li><a href="{% url 'create_recipe' %}">Create Recipe</a></li>
+                {% if user.is_authenticated %}
+                    <li><a href="{% url 'profile' %}">Profile</a></li>
+                    <li><a href="{% url 'favorite_recipes' %}">Favorite Recipes</a></li>
+                    <li><span>Welcome, {{ user.username }}</span></li>
+                    <li><a href="{% url 'logout' %}">Logout</a></li>
+                {% else %}
+                    <li><a href="{% url 'login_and_registration' %}">Login/Register</a></li>
+                {% endif %}
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="container">
+            {% block content %}
+            <!-- Questo blocco verrà sovrascritto nei template figlio -->
+            {% endblock %}
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Recipe Sharing Site. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,23 @@
+<!-- recipes/templates/recipes/login_and_registration.html -->
+{% extends 'base_generic.html' %}
+
+{% block title %}Login or Register - Recipe Sharing Site{% endblock %}
+
+{% block content %}
+  <h2>Login or Register</h2>
+
+  <!-- Form di Login -->
+  <form method="post" action="{% url 'login' %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Login</button>
+  </form>
+
+  <!-- Form di Registrazione -->
+  <h3>Register a New Account</h3>
+  <form method="post" action="{% url 'login_and_registration' %}">
+    {% csrf_token %}
+    {{ registration_form.as_p }}
+    <button type="submit">Register</button>
+  </form>
+{% endblock %}

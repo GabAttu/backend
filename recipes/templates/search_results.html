@@ -1,0 +1,10 @@
+{% extends 'base_generic.html' %}
+{% block content %}
+  <h2>Search Results</h2>
+  {% for recipe in recipes %}
+    <div>
+      <h3>{{ recipe.title }}</h3>
+      <p>{{ recipe.description }}</p>
+    </div>
+  {% endfor %}
+{% endblock %}

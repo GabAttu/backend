@@ -1,0 +1,17 @@
+<!-- recipes/templates/recipes/profile.html -->
+
+{% extends 'base_generic.html' %}
+{% block content %}
+  <h1>Il Mio Profilo</h1>
+
+  <h2>Le Mie Ricette</h2>
+  {% for recipe in user.recipes.all %}
+    <div class="recipe-box">
+      <h3>{{ recipe.title }}</h3>
+      <p>{{ recipe.description }}</p>
+    <a href="{% url 'edit_recipe' pk=recipe.pk %}">Modifica Ricetta</a>
+    </div>
+  {% empty %}
+    <p>Non hai ancora creato nessuna ricetta.</p>
+  {% endfor %}
+{% endblock %}
