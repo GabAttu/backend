@@ -1,3 +1,5 @@
+
+{% load static %}
 {% block content %}
     <h1>Risultati della Ricerca</h1>
 
@@ -9,7 +11,7 @@
     {% if recipes %}
         <ul>
             {% for recipe in recipes %}
-                <li><a href="{% url 'recipe_detail' pk=recipe.pk %}">{{ recipe.title }}</a></li>
+                <li><a href="{% url 'recipe_detail' pk=recipe.pk %}" >{{ recipe.title }}</a></li>
                 <!-- Aggiungi altri dettagli della ricetta se necessario -->
             {% endfor %}
         </ul>
