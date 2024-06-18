@@ -4,18 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="204ac7ba-c0de-494a-8d1f-b2ca19b5de86" name="Changes" comment="Commit">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/recipes/static/css/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/recipes/static/css/styles.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/recipes/templates/base_generic.html" beforeDir="false" afterPath="$PROJECT_DIR$/recipes/templates/base_generic.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/recipes/templates/recipes/edit_recipe.html" beforeDir="false" afterPath="$PROJECT_DIR$/recipes/templates/recipes/edit_recipe.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/recipes/templates/recipes/profile.html" beforeDir="false" afterPath="$PROJECT_DIR$/recipes/templates/recipes/profile.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/recipes/templates/recipes/recipe_detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/recipes/templates/recipes/recipe_detail.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/recipes/templates/search_results.html" beforeDir="false" afterPath="$PROJECT_DIR$/recipes/templates/recipes/search_results.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/recipes/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/recipes/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/recipes/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/recipes/views.py" afterDir="false" />
-    </list>
+    <list default="true" id="204ac7ba-c0de-494a-8d1f-b2ca19b5de86" name="Changes" comment="Commit" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -109,7 +98,7 @@
       <updated>1718613063389</updated>
       <workItem from="1718613064811" duration="6011000" />
       <workItem from="1718619353979" duration="372000" />
-      <workItem from="1718703092422" duration="2120000" />
+      <workItem from="1718703092422" duration="2453000" />
     </task>
     <task id="LOCAL-00001" summary="Commit">
       <option name="closed" value="true" />
@@ -127,7 +116,15 @@
       <option name="project" value="LOCAL" />
       <updated>1718619083877</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Commit">
+      <option name="closed" value="true" />
+      <created>1718705544983</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1718705544983</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
