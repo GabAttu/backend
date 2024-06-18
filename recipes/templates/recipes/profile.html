@@ -7,9 +7,11 @@
   <h2>Le Mie Ricette</h2>
   {% for recipe in user.recipes.all %}
     <div class="recipe-box">
-      <h3>{{ recipe.title }}</h3>
-      <p>{{ recipe.description }}</p>
-    <a href="{% url 'edit_recipe' pk=recipe.pk %}">Modifica Ricetta</a>
+      <h3><a href="{% url 'recipe_detail' pk=recipe.pk %}" class="recipe-link">{{ recipe.title }}</a></h3>
+      <p>{{ recipe.description|truncatewords:30 }}</p>
+      <form action="{% url 'edit_recipe' pk=recipe.pk %}" method="get">
+        <button type="submit" class="btn">Modifica Ricetta</button>
+      </form>
     </div>
   {% empty %}
     <p>Non hai ancora creato nessuna ricetta.</p>

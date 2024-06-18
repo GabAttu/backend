@@ -4,35 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="204ac7ba-c0de-494a-8d1f-b2ca19b5de86" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/ProjectRecipe.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ProjectRecipe/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ProjectRecipe/asgi.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ProjectRecipe/settings.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ProjectRecipe/urls.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ProjectRecipe/wsgi.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/manage.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/recipes/forms.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/recipes/migrations/0001_initial.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/recipes/migrations/0002_alter_recipe_author.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/recipes/migrations/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/recipes/static/css/styles.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/recipes/templates/base_generic.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/recipes/templates/favorite_recipe.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/recipes/templates/recipes/create_recipe.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/recipes/templates/recipes/edit_recipe.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/recipes/templates/recipes/home.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/recipes/templates/recipes/login_and_registration.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/recipes/templates/recipes/profile.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/recipes/templates/recipes/recipe_detail.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/recipes/templates/registration/login.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/recipes/templates/search_results.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/recipes/urls.py" afterDir="false" />
+    <list default="true" id="204ac7ba-c0de-494a-8d1f-b2ca19b5de86" name="Changes" comment="Commit">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/recipes/static/css/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/recipes/static/css/styles.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/recipes/templates/base_generic.html" beforeDir="false" afterPath="$PROJECT_DIR$/recipes/templates/base_generic.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/recipes/templates/recipes/edit_recipe.html" beforeDir="false" afterPath="$PROJECT_DIR$/recipes/templates/recipes/edit_recipe.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/recipes/templates/recipes/profile.html" beforeDir="false" afterPath="$PROJECT_DIR$/recipes/templates/recipes/profile.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/recipes/templates/recipes/recipe_detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/recipes/templates/recipes/recipe_detail.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/recipes/templates/search_results.html" beforeDir="false" afterPath="$PROJECT_DIR$/recipes/templates/recipes/search_results.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/recipes/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/recipes/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/recipes/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/recipes/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -54,30 +36,30 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 0
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 0
+}</component>
   <component name="ProjectId" id="2i02Eiwd7Tff1d106wdDTPXdQw5" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "DefaultHtmlFileTemplate": "HTML File",
-    "RunOnceActivity.OpenDjangoStructureViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "master",
-    "list.type.of.created.stylesheet": "CSS",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
+    &quot;RunOnceActivity.OpenDjangoStructureViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;list.type.of.created.stylesheet&quot;: &quot;CSS&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\Gabriele\ProjectRecipe\ProjectRecipe\recipes\templates\recipes" />
@@ -125,11 +107,34 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1718613063389</updated>
-      <workItem from="1718613064811" duration="5984000" />
+      <workItem from="1718613064811" duration="6011000" />
+      <workItem from="1718619353979" duration="372000" />
+      <workItem from="1718703092422" duration="2120000" />
     </task>
+    <task id="LOCAL-00001" summary="Commit">
+      <option name="closed" value="true" />
+      <created>1718619078444</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1718619078444</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Commit">
+      <option name="closed" value="true" />
+      <created>1718619083877</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1718619083877</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Commit" />
+    <option name="LAST_COMMIT_MESSAGE" value="Commit" />
   </component>
 </project>

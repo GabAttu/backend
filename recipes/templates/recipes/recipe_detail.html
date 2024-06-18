@@ -1,15 +1,20 @@
 <!-- recipes/templates/recipes/recipe_detail.html -->
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ recipe.title }}</title>
-    <!-- Includi eventuali CSS o JS -->
-</head>
-<body>
-    <h1>{{ recipe.title }}</h1>
-    <p>{{ recipe.description }}</p>
+<!-- recipes/templates/recipes/recipe_detail.html -->
 
-</body>
-</html>
+{% extends 'base_generic.html' %}
+
+{% block title %}{{ recipe.title }}{% endblock %}
+
+
+{% block content %}
+  <div class="recipe-detail">
+    <h1>{{ recipe.title }}</h1>
+    <p><strong>Descrizione:</strong> {{ recipe.description }}</p>
+    <p><strong>Ingredienti:</strong> {{ recipe.ingredients }}</p>
+    <p><strong>Istruzioni:</strong> {{ recipe.instructions }}</p>
+    <form action="{% url 'profile' %}" method="get">
+      <button type="submit" class="btn">Torna al profilo</button>
+    </form>
+  </div>
+{% endblock %}

@@ -15,9 +15,12 @@
         <nav class="navbar">
             <div class="container">
                 <a href="{% url 'home' %}" class="logo">Recipe Sharing Site</a>
+                <form action="{% url 'search_recipes' %}" method="get" class="search-form">
+                    <input type="text" name="query" placeholder="Cerca ricette...">
+                    <button type="submit">Cerca</button>
+                </form>
                 <ul class="nav-menu">
                 <li><a href="{% url 'home' %}">Home</a></li>
-                <li><a href="{% url 'search_recipes' %}">Search Recipes</a></li>
                 <li><a href="{% url 'create_recipe' %}">Create Recipe</a></li>
                 {% if user.is_authenticated %}
                     <li><a href="{% url 'profile' %}">Profile</a></li>

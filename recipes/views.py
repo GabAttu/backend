@@ -19,12 +19,13 @@ def home(request):
     }
     return render(request, 'home.html', context)
 def search_recipes(request):
-    query = request.GET.get('q')
+    query = request.GET.get('query')
+    recipes = Recipe.objects.all()
+
     if query:
-        recipes = Recipe.objects.filter(title__icontains=query)
-    else:
-        recipes = Recipe.objects.all()
-    return render(request, 'recipes/search_results.html', {'recipes': recipes})
+        recipes = recipes.filter(title__icontains=query)
+
+    return render(request, 'recipes/search_results.html', {'recipes': recipes, 'query': query})
 
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
