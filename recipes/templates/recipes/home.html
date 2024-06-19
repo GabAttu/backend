@@ -1,22 +1,25 @@
 <!-- recipes/templates/recipes/home.html -->
 {% extends 'base_generic.html' %}
-
+{% load static %}
 {% block title %}Home - Recipe Sharing Site{% endblock %}
 
 {% block content %}
   <h2>Top Recipes</h2>
   {% if top_recipes %}
-    <ul>
+    <div class="top-recipes-container">
       {% for recipe in top_recipes %}
-        <li>
-          <h3><a href="{% url 'recipe_detail' recipe.id %}">{{ recipe.title }}</a></h3>
-          <p>{{ recipe.description }}</p>
-          <p>Author: {{ recipe.author.username }}</p>
-          <p>Favorites Count: {{ recipe.favorites_count }}</p>
-          <!-- Aggiungi altri dettagli della ricetta se necessario -->
-        </li>
+        <div class="top-recipe-box">
+    <img src="https://placehold.co/600x400" alt="{{ recipe.title }}">
+    <h3><a href="{% url 'recipe_detail' recipe.id %}">{{ recipe.title }}</a></h3>
+    <p>{{ recipe.description }}</p>
+    <div class="recipe-meta">
+        <span>Author: {{ recipe.author.username }}</span>
+        <span>Likes: {{ recipe.likes }}</span>
+        <button class="like-btn" onclick="likeRecipe({{ recipe.id }})">Like</button>
+    </div>
+</div>
       {% endfor %}
-    </ul>
+    </div>
   {% else %}
     <p>No recipes found.</p>
   {% endif %}

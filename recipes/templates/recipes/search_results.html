@@ -1,18 +1,12 @@
-
+{% extends 'base_generic.html' %}
 {% load static %}
 {% block content %}
     <h1>Risultati della Ricerca</h1>
-
-    <form action="{% url 'search_recipes' %}" method="get" class="search-form">
-        <input type="text" name="query" value="{{ query }}" placeholder="Cerca ricette...">
-        <button type="submit">Cerca</button>
-    </form>
-
     {% if recipes %}
-        <ul>
+        <ul class="list_results">
             {% for recipe in recipes %}
                 <li><a href="{% url 'recipe_detail' pk=recipe.pk %}" >{{ recipe.title }}</a></li>
-                <!-- Aggiungi altri dettagli della ricetta se necessario -->
+
             {% endfor %}
         </ul>
     {% else %}

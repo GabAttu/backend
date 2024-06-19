@@ -1,0 +1,27 @@
+{% extends 'base_generic.html' %}
+
+{% block title %}Favorite Recipes - Recipe Sharing Site{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Favorite Recipes</h2>
+    {% if liked_recipes %}
+        <div class="row">
+        {% for recipe in liked_recipes %}
+            <div class="profile-recipe-box">
+                <img src="https://placehold.co/600x400" alt="{{ recipe.title }}">
+                <h3><a href="{% url 'recipe_detail' recipe.id %}">{{ recipe.title }}</a></h3>
+                <p>{{ recipe.description }}</p>
+                <div class="recipe-meta">
+                    <span>Author: {{ recipe.author.username }}</span>
+                    <span>Likes: {{ recipe.likes.count }}</span>
+                    <button class="like-btn" onclick="likeRecipe({{ recipe.id }})">Like</button>
+                </div>
+            </div>
+        {% endfor %}
+        </div>
+    {% else %}
+        <p>No favorite recipes found.</p>
+    {% endif %}
+</div>
+{% endblock %}

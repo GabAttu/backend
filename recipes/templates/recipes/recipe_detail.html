@@ -1,20 +1,30 @@
 <!-- recipes/templates/recipes/recipe_detail.html -->
 
-<!-- recipes/templates/recipes/recipe_detail.html -->
-
 {% extends 'base_generic.html' %}
 
 {% block title %}{{ recipe.title }}{% endblock %}
 
-
 {% block content %}
-  <div class="recipe-detail">
-    <h1>{{ recipe.title }}</h1>
-    <p><strong>Descrizione:</strong> {{ recipe.description }}</p>
-    <p><strong>Ingredienti:</strong> {{ recipe.ingredients }}</p>
-    <p><strong>Istruzioni:</strong> {{ recipe.instructions }}</p>
-    <form action="{% url 'profile' %}" method="get">
-      <button type="submit" class="btn">Torna al profilo</button>
-    </form>
-  </div>
+<div class="container">
+    <div class="recipe-detail">
+        <h1>{{ recipe.title }}</h1>
+        <p><img src="https://placehold.co/600x400" alt="{{ recipe.title }}"></p>
+        <p><strong>Descrizione:</strong> {{ recipe.description }}</p>
+        <p><strong>Ingredienti:</strong> {{ recipe.ingredients }}</p>
+        <p><strong>Istruzioni:</strong> {{ recipe.instructions }}</p>
+        <form action="{% url 'recipe_detail' recipe.id %}" method="post">
+        {% csrf_token %}
+        <button type="submit" class="like-btn">
+          {% if request.user in recipe.likes.all %}
+            Unlike
+          {% else %}
+            Like
+          {% endif %}
+        </button>
+      </form>
+        <form action="{% url 'home' %}" method="get">
+            <button type="submit" class="btn">Torna alla Home</button>
+        </form>
+    </div>
+</div>
 {% endblock %}

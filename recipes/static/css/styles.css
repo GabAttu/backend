@@ -1,6 +1,4 @@
-/* styles.css */
 
-/* Reset CSS */
 * {
     margin: 0;
     padding: 0;
@@ -46,7 +44,7 @@ header {
 }
 
 .navbar {
-    background-color: #f0f0f0;
+    background-color: #333;
     padding: 10px 0;
 }
 
@@ -150,15 +148,10 @@ footer {
     background-color: #0056b3;
 }
 
-.recipe-detail .btn {
-    display: inline-block;
-    margin-top: 10px;
-    color: #fff;
-    background-color: #007bff;
-    text-decoration: none;
-    padding: 10px 15px;
-    border-radius: 4px;
-    transition: background-color 0.3s;
+
+
+.title_recipe{
+    color: #333333;
 }
 
 .recipe-detail .btn:hover {
@@ -176,3 +169,318 @@ footer {
     text-decoration: underline;  /* Sottolinea il link al passaggio del mouse */
 }
 
+/* Styles for Top Recipe Boxes */
+.top-recipe-box {
+    border: 1px solid #ddd;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.top-recipe-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+}
+
+.top-recipe-box img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+.top-recipe-box h3 {
+    margin-top: 0;
+    font-size: 1.5rem;
+    color: #333;
+}
+
+.top-recipe-box p {
+    margin: 10px 0;
+    color: #666;
+}
+
+.top-recipe-box .recipe-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.top-recipe-box .recipe-meta span {
+    margin-right: 10px;
+    font-size: 0.9rem;
+    color: #999;
+}
+
+.top-recipe-box .recipe-meta .like-btn {
+    background-color: #007bff;
+    color: #fff;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.top-recipe-box .recipe-meta .like-btn:hover {
+    background-color: #0056b3;
+}
+
+/* Nuovi stili per le ricette nel profilo personale */
+.profile-recipe-box {
+    border: 1px solid #ddd;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.profile-recipe-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+}
+
+.profile-recipe-box img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+.profile-recipe-box h3 {
+    margin-top: 0;
+    font-size: 1.5rem;
+    color: #333;
+}
+
+.profile-recipe-box p {
+    margin: 10px 0;
+    color: #666;
+}
+
+.profile-recipe-box .recipe-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.profile-recipe-box .recipe-meta span {
+    margin-right: 10px;
+    font-size: 0.9rem;
+    color: #999;
+}
+
+.profile-recipe-box .recipe-meta .like-btn {
+    background-color: #007bff;
+    color: #fff;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.profile-recipe-box .recipe-meta .like-btn:hover {
+    background-color: #0056b3;
+}
+
+/* styles.css */
+
+/* Altri stili esistenti */
+
+/* Styles for Recipe Detail Page */
+.recipe-detail {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.recipe-detail h1 {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.recipe-detail p {
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.recipe-detail p strong {
+    color: #333;
+}
+
+.like-btn {
+    background-color: #007bff;
+    color: #fff;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.like-btn:hover {
+    background-color: #0056b3;
+}
+
+.recipe-detail .btn {
+    background-color: #28a745;
+    color: #fff;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.recipe-detail .btn:hover {
+    background-color: #218838;
+}
+
+.recipe-detail form {
+    display: inline-block;
+    margin-top: 20px;
+}
+
+
+/* Pulsante di cancellazione */
+.delete-btn {
+    width: 150px;
+    height: 50px;
+    cursor: pointer;
+    display: inline-block;
+    background: #e62222;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.15);
+    position: relative;
+    overflow: hidden;
+    transition: background 0.3s, box-shadow 0.3s;
+    text-decoration: none;
+    color: white;
+    text-align: center;
+    line-height: 50px; /* Altezza del pulsante centrata verticalmente */
+}
+
+.delete-btn:hover {
+    background: #ff3636;
+    box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.3);
+}
+
+.delete-btn span {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.1);
+    transform: translateX(-100%);
+    transition: transform 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.delete-btn:hover span {
+    transform: translateX(0);
+}
+
+.delete-btn .text {
+    transition: transform 0.3s, color 0.3s;
+    transform: translateX(0);
+    color: white;
+    font-weight: bold;
+}
+
+.delete-btn:hover .text {
+    transform: translateX(100%);
+    color: transparent;
+}
+
+.delete-btn svg {
+    width: 15px;
+    fill: #eee;
+}
+
+.delete-btn:active .icon svg {
+    transform: scale(0.8);
+}
+
+.delete-btn:focus {
+    outline: none;
+}
+
+/* styles.css */
+
+.edit-button {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: rgb(20, 20, 20);
+    border: none;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0);
+    cursor: pointer;
+    transition-duration: 0.3s;
+    overflow: hidden;
+    position: relative;
+    text-decoration: none !important;
+}
+
+.edit-svgIcon {
+    width: 17px;
+    transition-duration: 0.3s;
+}
+
+.edit-svgIcon path {
+    fill: white;
+}
+
+.edit-button:hover {
+    width: 120px;
+    border-radius: 50px;
+    transition-duration: 0.3s;
+    background-color: rgb(255, 69, 69);
+    align-items: center;
+}
+
+.edit-button:hover .edit-svgIcon {
+    width: 20px;
+    transition-duration: 0.3s;
+    transform: translateY(60%);
+    -webkit-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+    transform: rotate(360deg);
+}
+
+.edit-button::before {
+    display: none;
+    content: "Edit";
+    color: white;
+    transition-duration: 0.3s;
+    font-size: 12px; /* Modifica la dimensione del testo se necessario */
+}
+
+.edit-button:hover::before {
+    display: block;
+    padding-left: 10px;
+    font-size: 12px; /* Modifica la dimensione del testo se necessario */
+    opacity: 1;
+    transform: translateY(0px);
+    transition-duration: 0.3s;
+}

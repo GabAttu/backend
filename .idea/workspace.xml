@@ -5,9 +5,25 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="204ac7ba-c0de-494a-8d1f-b2ca19b5de86" name="Changes" comment="Commit">
+      <change afterPath="$PROJECT_DIR$/recipes/migrations/0003_remove_recipe_favorites_count_recipe_likes.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/recipes/migrations/0004_recipe_favorites.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/recipes/migrations/0005_remove_recipe_likes_recipe_likes.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/recipes/migrations/0006_remove_recipe_favorites.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/recipes/static/js/favorites.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/recipes/templates/recipes/favorite_recipes.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/recipes/templates/recipes/recipe_confirm_delete.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/recipes/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/recipes/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/recipes/static/css/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/recipes/static/css/styles.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/recipes/templates/base_generic.html" beforeDir="false" afterPath="$PROJECT_DIR$/recipes/templates/base_generic.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/recipes/templates/favorite_recipe.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/recipes/templates/recipes/home.html" beforeDir="false" afterPath="$PROJECT_DIR$/recipes/templates/recipes/home.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/recipes/templates/recipes/profile.html" beforeDir="false" afterPath="$PROJECT_DIR$/recipes/templates/recipes/profile.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/recipes/templates/recipes/recipe_detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/recipes/templates/recipes/recipe_detail.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/recipes/templates/recipes/search_results.html" beforeDir="false" afterPath="$PROJECT_DIR$/recipes/templates/recipes/search_results.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/recipes/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/recipes/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/recipes/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/recipes/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -22,13 +38,31 @@
       <list>
         <option value="Python Script" />
         <option value="CSS File" />
+        <option value="JavaScript File" />
         <option value="HTML File" />
       </list>
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;GabAttu&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/GabAttu/backend&quot;,
+    &quot;accountId&quot;: &quot;e7c49b1f-8115-47b6-8c37-c1500d1a33e2&quot;
+  }
+}</component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 0
 }</component>
@@ -102,7 +136,11 @@
       <updated>1718613063389</updated>
       <workItem from="1718613064811" duration="6011000" />
       <workItem from="1718619353979" duration="372000" />
-      <workItem from="1718703092422" duration="3129000" />
+      <workItem from="1718703092422" duration="3176000" />
+      <workItem from="1718706483512" duration="49000" />
+      <workItem from="1718706659445" duration="58000" />
+      <workItem from="1718737790245" duration="4504000" />
+      <workItem from="1718780905168" duration="10822000" />
     </task>
     <task id="LOCAL-00001" summary="Commit">
       <option name="closed" value="true" />
@@ -136,11 +174,30 @@
       <option name="project" value="LOCAL" />
       <updated>1718705585118</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Commit">
+      <option name="closed" value="true" />
+      <created>1718706268099</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1718706268099</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Commit" />

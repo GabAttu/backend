@@ -1,3 +1,4 @@
+from django.http import HttpResponseForbidden
 from django.shortcuts import render
 
 # Create your views here.
@@ -11,13 +12,12 @@ from .forms import LoginForm
 from .forms import RecipeForm
 
 def home(request):
-    return render(request, 'recipes/home.html')
-    top_recipes = Recipe.objects.order_by('-favorites_count')[:5]  # Mostra le prime 5 ricette
+    top_recipes = Recipe.objects.order_by('-likes')[:5]  # Mostra le prime 5 ricette con più mi piace
 
     context = {
         'top_recipes': top_recipes,
     }
-    return render(request, 'home.html', context)
+    return render(request, 'recipes/home.html', context)
 def search_recipes(request):
     query = request.GET.get('query')
     recipes = Recipe.objects.all()
@@ -47,17 +47,19 @@ def create_recipe(request):
 
 @login_required
 def profile(request):
-    recipes = Recipe.objects.filter(author=request.user)
-    return render(request, 'recipes/profile.html', {'recipes': recipes})
-
+    user = request.user
+    liked_recipes = user.liked_recipes.all()
+    context = {
+        'liked_recipes': liked_recipes,
+    }
+    return render(request, 'recipes/profile.html', context)
 
 
 @login_required
 def favorite_recipes(request):
-    favorites = request.user.favorite_recipes.all()
-    return render(request, 'recipes/favorite_recipes.html', {'recipes': favorites})
-
-
+    user = request.user
+    liked_recipes = user.liked_recipes.all()
+    return render(request, 'recipes/favorite_recipes.html', {'liked_recipes': liked_recipes})
 def login_and_registration(request):
     if request.user.is_authenticated:
         return redirect('home')  # Reindirizza alla home se l'utente è già autenticato
@@ -92,8 +94,19 @@ def logout_view(request):
 from django.shortcuts import render, get_object_or_404
 from .models import Recipe
 
+
 def recipe_detail(request, pk):
     recipe = get_object_or_404(Recipe, pk=pk)
+
+    if request.method == 'POST':
+        if request.user.is_authenticated:
+            if request.user in recipe.likes.all():
+                recipe.likes.remove(request.user)
+            else:
+                recipe.likes.add(request.user)
+        else:
+            return redirect('login_and_registration')  # Reindirizza l'utente non autenticato alla pagina di login
+
     context = {
         'recipe': recipe,
     }
@@ -115,3 +128,33 @@ def edit_recipe(request, pk):
         'recipe': recipe,
     }
     return render(request, 'recipes/edit_recipe.html', context)
+
+@login_required
+def recipe_delete(request, recipe_id):
+    recipe = get_object_or_404(Recipe, id=recipe_id)
+    if request.user != recipe.author:
+        return HttpResponseForbidden()
+    if request.method == 'POST':
+        recipe.delete()
+        return redirect('profile')
+
+
+def like_recipe(request, recipe_id):
+    recipe = get_object_or_404(Recipe, id=recipe_id)
+    if request.method == 'POST':
+        # Aggiungi l'utente corrente ai preferiti della ricetta
+        if recipe.favorites.filter(id=request.user.id).exists():
+            # Se l'utente è già tra i preferiti, non fare nulla
+            pass
+        else:
+            recipe.favorites.add(request.user)
+            recipe.likes += 1
+            recipe.save()
+    return redirect('recipe_detail', pk=recipe_id)
+
+
+def favorite_recipes(request):
+    user = request.user
+    favorite_recipes = user.favorite_recipes.all()
+    return render(request, 'recipes/favorite_recipes.html', {'recipes': favorite_recipes})
+
