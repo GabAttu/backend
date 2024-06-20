@@ -10,12 +10,11 @@
       {% for recipe in top_recipes %}
         <div class="top-recipe-box">
     <img src="https://placehold.co/600x400" alt="{{ recipe.title }}">
-    <h3><a href="{% url 'recipe_detail' recipe.id %}">{{ recipe.title }}</a></h3>
+    <h3><a href="{% url 'recipe_detail' pk=recipe.pk %}">{{ recipe.title }}</a></h3>
     <p>{{ recipe.description }}</p>
     <div class="recipe-meta">
         <span>Author: {{ recipe.author.username }}</span>
-        <span>Likes: {{ recipe.likes }}</span>
-        <button class="like-btn" onclick="likeRecipe({{ recipe.id }})">Like</button>
+        <span>Likes: {{ recipe.like_count }}</span>
     </div>
 </div>
       {% endfor %}

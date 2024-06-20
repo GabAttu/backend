@@ -1,15 +1,23 @@
 {% extends 'base_generic.html' %}
 {% load static %}
 {% block content %}
+<div class="container">
     <h1>Risultati della Ricerca</h1>
     {% if recipes %}
         <ul class="list_results">
             {% for recipe in recipes %}
-                <li><a href="{% url 'recipe_detail' pk=recipe.pk %}" >{{ recipe.title }}</a></li>
-
+                <li class="recipe-item">
+                    <h3><a href="{% url 'recipe_detail' pk=recipe.pk %}">{{ recipe.title }}</a></h3>
+                    <p>{{ recipe.description }}</p>
+                    <div class="recipe-meta">
+                        <span>Autore: {{ recipe.author.username }}</span>
+                        <span>Mi piace: {{ recipe.liked_by.count }}</span>
+                    </div>
+                </li>
             {% endfor %}
         </ul>
     {% else %}
         <p>Nessuna ricetta trovata.</p>
     {% endif %}
+</div>
 {% endblock %}

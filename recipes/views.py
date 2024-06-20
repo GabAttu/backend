@@ -1,3 +1,4 @@
+from django.db.models import Count
 from django.http import HttpResponseForbidden
 from django.shortcuts import render
 
@@ -12,12 +13,13 @@ from .forms import LoginForm
 from .forms import RecipeForm
 
 def home(request):
-    top_recipes = Recipe.objects.order_by('-likes')[:5]  # Mostra le prime 5 ricette con più mi piace
+    top_recipes = Recipe.objects.annotate(like_count=Count('liked_by')).order_by('-like_count')[:5]
 
     context = {
         'top_recipes': top_recipes,
     }
     return render(request, 'recipes/home.html', context)
+
 def search_recipes(request):
     query = request.GET.get('query')
     recipes = Recipe.objects.all()
@@ -47,19 +49,14 @@ def create_recipe(request):
 
 @login_required
 def profile(request):
-    user = request.user
-    liked_recipes = user.liked_recipes.all()
-    context = {
-        'liked_recipes': liked_recipes,
-    }
-    return render(request, 'recipes/profile.html', context)
+    user_recipes = Recipe.objects.filter(author=request.user)
+    favorite_recipes = request.user.liked_recipes.all()
+    return render(request, 'recipes/profile.html', {
+        'recipes': user_recipes,
+        'favorite_recipes': favorite_recipes,
+    })
 
 
-@login_required
-def favorite_recipes(request):
-    user = request.user
-    liked_recipes = user.liked_recipes.all()
-    return render(request, 'recipes/favorite_recipes.html', {'liked_recipes': liked_recipes})
 def login_and_registration(request):
     if request.user.is_authenticated:
         return redirect('home')  # Reindirizza alla home se l'utente è già autenticato
@@ -89,7 +86,6 @@ def logout_view(request):
     logout(request)
     return redirect('home')
 
-# recipes/views.py
 
 from django.shortcuts import render, get_object_or_404
 from .models import Recipe
@@ -153,8 +149,28 @@ def like_recipe(request, recipe_id):
     return redirect('recipe_detail', pk=recipe_id)
 
 
-def favorite_recipes(request):
-    user = request.user
-    favorite_recipes = user.favorite_recipes.all()
-    return render(request, 'recipes/favorite_recipes.html', {'recipes': favorite_recipes})
+def add_to_favorites(request, pk):
+    recipe = get_object_or_404(Recipe, pk=pk)
+    if recipe.liked_by.filter(id=request.user.id).exists():
+        recipe.liked_by.remove(request.user)
+        recipe.favorites_count -= 1
+    else:
+        recipe.liked_by.add(request.user)
+        recipe.favorites_count += 1
+    recipe.save()
+    return redirect('recipe_detail', pk=pk)
 
+@login_required
+def toggle_favorite(request, pk):
+    recipe = get_object_or_404(Recipe, pk=pk)
+    if request.user in recipe.liked_by.all():
+        recipe.liked_by.remove(request.user)
+    else:
+        recipe.liked_by.add(request.user)
+    return redirect('recipe_detail', pk=pk)
+
+
+@login_required
+def favorite_recipes(request):
+    recipes = request.user.liked_recipes.all()
+    return render(request, 'recipes/favorite_recipes.html', {'recipes': recipes})

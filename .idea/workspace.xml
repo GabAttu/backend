@@ -5,19 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="204ac7ba-c0de-494a-8d1f-b2ca19b5de86" name="Changes" comment="Commit">
-      <change afterPath="$PROJECT_DIR$/recipes/migrations/0003_remove_recipe_favorites_count_recipe_likes.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/recipes/migrations/0004_recipe_favorites.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/recipes/migrations/0005_remove_recipe_likes_recipe_likes.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/recipes/migrations/0006_remove_recipe_favorites.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/recipes/static/js/favorites.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/recipes/templates/recipes/favorite_recipes.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/recipes/templates/recipes/recipe_confirm_delete.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/recipes/migrations/0007_rename_likes_recipe_liked_by.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/recipes/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/recipes/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/recipes/static/css/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/recipes/static/css/styles.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/recipes/static/js/favorites.js" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/recipes/templates/base_generic.html" beforeDir="false" afterPath="$PROJECT_DIR$/recipes/templates/base_generic.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/recipes/templates/favorite_recipe.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/recipes/templates/recipes/favorite_recipes.html" beforeDir="false" afterPath="$PROJECT_DIR$/recipes/templates/recipes/favorite_recipes.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/recipes/templates/recipes/home.html" beforeDir="false" afterPath="$PROJECT_DIR$/recipes/templates/recipes/home.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/recipes/templates/recipes/profile.html" beforeDir="false" afterPath="$PROJECT_DIR$/recipes/templates/recipes/profile.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/recipes/templates/recipes/recipe_detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/recipes/templates/recipes/recipe_detail.html" afterDir="false" />
@@ -46,7 +40,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="master" />
+        <entry key="$PROJECT_DIR$" value="end_version_master" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -72,21 +66,21 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
-    &quot;RunOnceActivity.OpenDjangoStructureViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;list.type.of.created.stylesheet&quot;: &quot;CSS&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "DefaultHtmlFileTemplate": "HTML File",
+    "RunOnceActivity.OpenDjangoStructureViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "master",
+    "list.type.of.created.stylesheet": "CSS",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\Gabriele\ProjectRecipe\ProjectRecipe\recipes\templates\recipes" />
@@ -140,7 +134,8 @@
       <workItem from="1718706483512" duration="49000" />
       <workItem from="1718706659445" duration="58000" />
       <workItem from="1718737790245" duration="4504000" />
-      <workItem from="1718780905168" duration="10822000" />
+      <workItem from="1718780905168" duration="10847000" />
+      <workItem from="1718891926403" duration="5129000" />
     </task>
     <task id="LOCAL-00001" summary="Commit">
       <option name="closed" value="true" />
@@ -182,7 +177,15 @@
       <option name="project" value="LOCAL" />
       <updated>1718706268099</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Commit">
+      <option name="closed" value="true" />
+      <created>1718791850074</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1718791850074</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

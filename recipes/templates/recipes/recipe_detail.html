@@ -12,16 +12,22 @@
         <p><strong>Descrizione:</strong> {{ recipe.description }}</p>
         <p><strong>Ingredienti:</strong> {{ recipe.ingredients }}</p>
         <p><strong>Istruzioni:</strong> {{ recipe.instructions }}</p>
-        <form action="{% url 'recipe_detail' recipe.id %}" method="post">
-        {% csrf_token %}
-        <button type="submit" class="like-btn">
-          {% if request.user in recipe.likes.all %}
-            Unlike
-          {% else %}
-            Like
-          {% endif %}
-        </button>
-      </form>
+        <p><strong>Tempo di preparazione:</strong> {{ recipe.prep_time }}</p>
+        <p><strong>Tempo di Cottura</strong> {{ recipe.cook_time }}</p>
+
+        <form action="{% url 'toggle_favorite' pk=recipe.pk %}" method="post">
+      {% csrf_token %}
+      <button type="submit" class="like-btn">
+        {% if user in recipe.liked_by.all %}
+          Rimuovi dai Preferiti
+        {% else %}
+          Aggiungi ai Preferiti
+        {% endif %}
+      </button>
+    </form>
+
+    <p>Mi piace: {{ recipe.liked_by.count }}</p>
+
         <form action="{% url 'home' %}" method="get">
             <button type="submit" class="btn">Torna alla Home</button>
         </form>
