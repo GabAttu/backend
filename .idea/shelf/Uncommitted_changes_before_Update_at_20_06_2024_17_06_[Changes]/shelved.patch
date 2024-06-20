@@ -1,0 +1,497 @@
+Index: recipes/templates/recipes/favorite_recipes.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>{% extends 'base_generic.html' %}\r\n\r\n{% block title %}Favorite Recipes - Recipe Sharing Site{% endblock %}\r\n\r\n{% block content %}\r\n<div class=\"container\">\r\n    <h2>Favorite Recipes</h2>\r\n    {% if liked_recipes %}\r\n        <div class=\"row\">\r\n        {% for recipe in liked_recipes %}\r\n            <div class=\"profile-recipe-box\">\r\n                <img src=\"https://placehold.co/600x400\" alt=\"{{ recipe.title }}\">\r\n                <h3><a href=\"{% url 'recipe_detail' recipe.id %}\">{{ recipe.title }}</a></h3>\r\n                <p>{{ recipe.description }}</p>\r\n                <div class=\"recipe-meta\">\r\n                    <span>Author: {{ recipe.author.username }}</span>\r\n                    <span>Likes: {{ recipe.likes.count }}</span>\r\n                    <button class=\"like-btn\" onclick=\"likeRecipe({{ recipe.id }})\">Like</button>\r\n                </div>\r\n            </div>\r\n        {% endfor %}\r\n        </div>\r\n    {% else %}\r\n        <p>No favorite recipes found.</p>\r\n    {% endif %}\r\n</div>\r\n{% endblock %}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/recipes/templates/recipes/favorite_recipes.html b/recipes/templates/recipes/favorite_recipes.html
+--- a/recipes/templates/recipes/favorite_recipes.html	(revision 7045056bd4da926341948bff3c8921f88afe9592)
++++ b/recipes/templates/recipes/favorite_recipes.html	(date 1718894577453)
+@@ -10,7 +10,7 @@
+         {% for recipe in liked_recipes %}
+             <div class="profile-recipe-box">
+                 <img src="https://placehold.co/600x400" alt="{{ recipe.title }}">
+-                <h3><a href="{% url 'recipe_detail' recipe.id %}">{{ recipe.title }}</a></h3>
++                <h3><a href="{% url 'recipe_detail' pk=recipe.pk %}">{{ recipe.title }}</a></h3>
+                 <p>{{ recipe.description }}</p>
+                 <div class="recipe-meta">
+                     <span>Author: {{ recipe.author.username }}</span>
+Index: recipes/models.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>from django.db import models\r\n\r\n# Create your models here.\r\nfrom django.db import models\r\nfrom django.contrib.auth.models import User\r\n\r\nclass Recipe(models.Model):\r\n    title = models.CharField(max_length=200)\r\n    description = models.TextField()\r\n    ingredients = models.TextField()\r\n    instructions = models.TextField()\r\n    prep_time = models.IntegerField()\r\n    cook_time = models.IntegerField()\r\n    author = models.ForeignKey(User, on_delete=models.CASCADE,related_name='recipes')\r\n    created_at = models.DateTimeField(auto_now_add=True)\r\n    updated_at = models.DateTimeField(auto_now=True)\r\n    likes = models.ManyToManyField(User, related_name='liked_recipes', blank=True)\r\n\r\n    def __str__(self):\r\n        return self.title\r\n\r\n    def total_likes(self):\r\n        return self.likes.count()
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/recipes/models.py b/recipes/models.py
+--- a/recipes/models.py	(revision 7045056bd4da926341948bff3c8921f88afe9592)
++++ b/recipes/models.py	(date 1718893996140)
+@@ -14,10 +14,8 @@
+     author = models.ForeignKey(User, on_delete=models.CASCADE,related_name='recipes')
+     created_at = models.DateTimeField(auto_now_add=True)
+     updated_at = models.DateTimeField(auto_now=True)
+-    likes = models.ManyToManyField(User, related_name='liked_recipes', blank=True)
++    liked_by = models.ManyToManyField(User, related_name='liked_recipes', blank=True)
+ 
+-    def __str__(self):
++def __str__(self):
+         return self.title
+ 
+-    def total_likes(self):
+-        return self.likes.count()
+\ No newline at end of file
+Index: recipes/views.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>from django.http import HttpResponseForbidden\r\nfrom django.shortcuts import render\r\n\r\n# Create your views here.\r\nfrom django.shortcuts import render, get_object_or_404\r\nfrom django.contrib.auth.decorators import login_required\r\nfrom .models import Recipe\r\nfrom .forms import RecipeForm, RegistrationForm\r\nfrom django.contrib.auth import login, authenticate, logout\r\nfrom django.contrib.auth.models import User\r\nfrom .forms import LoginForm\r\nfrom .forms import RecipeForm\r\n\r\ndef home(request):\r\n    top_recipes = Recipe.objects.order_by('-likes')[:5]  # Mostra le prime 5 ricette con più mi piace\r\n\r\n    context = {\r\n        'top_recipes': top_recipes,\r\n    }\r\n    return render(request, 'recipes/home.html', context)\r\ndef search_recipes(request):\r\n    query = request.GET.get('query')\r\n    recipes = Recipe.objects.all()\r\n\r\n    if query:\r\n        recipes = recipes.filter(title__icontains=query)\r\n\r\n    return render(request, 'recipes/search_results.html', {'recipes': recipes, 'query': query})\r\n\r\nfrom django.shortcuts import redirect\r\nfrom django.contrib.auth.decorators import login_required\r\nfrom .forms import RecipeForm\r\n\r\n@login_required\r\ndef create_recipe(request):\r\n    if request.method == 'POST':\r\n        form = RecipeForm(request.POST, request.FILES)\r\n        if form.is_valid():\r\n            recipe = form.save(commit=False)\r\n            recipe.author = request.user\r\n            recipe.save()\r\n            return redirect('recipe_detail', pk=recipe.pk)\r\n    else:\r\n        form = RecipeForm()\r\n    return render(request, 'recipes/create_recipe.html', {'form': form})\r\n\r\n\r\n@login_required\r\ndef profile(request):\r\n    user = request.user\r\n    liked_recipes = user.liked_recipes.all()\r\n    context = {\r\n        'liked_recipes': liked_recipes,\r\n    }\r\n    return render(request, 'recipes/profile.html', context)\r\n\r\n\r\n@login_required\r\ndef favorite_recipes(request):\r\n    user = request.user\r\n    liked_recipes = user.liked_recipes.all()\r\n    return render(request, 'recipes/favorite_recipes.html', {'liked_recipes': liked_recipes})\r\ndef login_and_registration(request):\r\n    if request.user.is_authenticated:\r\n        return redirect('home')  # Reindirizza alla home se l'utente è già autenticato\r\n\r\n    if request.method == 'POST':\r\n        login_form = LoginForm(request.POST)\r\n        if login_form.is_valid():\r\n            username = login_form.cleaned_data['username']\r\n            password = login_form.cleaned_data['password']\r\n            user = authenticate(username=username, password=password)\r\n            if user is not None:\r\n                login(request, user)\r\n                return redirect('home')  # Reindirizza alla home dopo il login\r\n    else:\r\n        login_form = LoginForm()\r\n\r\n    registration_form = RegistrationForm()\r\n\r\n    context = {\r\n        'login_form': login_form,\r\n        'registration_form': registration_form,\r\n    }\r\n    return render(request, 'recipes/login_and_registration.html', context)\r\n\r\n\r\ndef logout_view(request):\r\n    logout(request)\r\n    return redirect('home')\r\n\r\n# recipes/views.py\r\n\r\nfrom django.shortcuts import render, get_object_or_404\r\nfrom .models import Recipe\r\n\r\n\r\ndef recipe_detail(request, pk):\r\n    recipe = get_object_or_404(Recipe, pk=pk)\r\n\r\n    if request.method == 'POST':\r\n        if request.user.is_authenticated:\r\n            if request.user in recipe.likes.all():\r\n                recipe.likes.remove(request.user)\r\n            else:\r\n                recipe.likes.add(request.user)\r\n        else:\r\n            return redirect('login_and_registration')  # Reindirizza l'utente non autenticato alla pagina di login\r\n\r\n    context = {\r\n        'recipe': recipe,\r\n    }\r\n    return render(request, 'recipes/recipe_detail.html', context)\r\n\r\n\r\ndef edit_recipe(request, pk):\r\n    recipe = get_object_or_404(Recipe, pk=pk)\r\n    if request.method == 'POST':\r\n        form = RecipeForm(request.POST, instance=recipe)\r\n        if form.is_valid():\r\n            form.save()\r\n            return redirect('profile')  # Reindirizza al profilo dopo la modifica\r\n    else:\r\n        form = RecipeForm(instance=recipe)\r\n\r\n    context = {\r\n        'form': form,\r\n        'recipe': recipe,\r\n    }\r\n    return render(request, 'recipes/edit_recipe.html', context)\r\n\r\n@login_required\r\ndef recipe_delete(request, recipe_id):\r\n    recipe = get_object_or_404(Recipe, id=recipe_id)\r\n    if request.user != recipe.author:\r\n        return HttpResponseForbidden()\r\n    if request.method == 'POST':\r\n        recipe.delete()\r\n        return redirect('profile')\r\n\r\n\r\ndef like_recipe(request, recipe_id):\r\n    recipe = get_object_or_404(Recipe, id=recipe_id)\r\n    if request.method == 'POST':\r\n        # Aggiungi l'utente corrente ai preferiti della ricetta\r\n        if recipe.favorites.filter(id=request.user.id).exists():\r\n            # Se l'utente è già tra i preferiti, non fare nulla\r\n            pass\r\n        else:\r\n            recipe.favorites.add(request.user)\r\n            recipe.likes += 1\r\n            recipe.save()\r\n    return redirect('recipe_detail', pk=recipe_id)\r\n\r\n\r\ndef favorite_recipes(request):\r\n    user = request.user\r\n    favorite_recipes = user.favorite_recipes.all()\r\n    return render(request, 'recipes/favorite_recipes.html', {'recipes': favorite_recipes})\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/recipes/views.py b/recipes/views.py
+--- a/recipes/views.py	(revision 7045056bd4da926341948bff3c8921f88afe9592)
++++ b/recipes/views.py	(date 1718894847699)
+@@ -1,3 +1,4 @@
++from django.db.models import Count
+ from django.http import HttpResponseForbidden
+ from django.shortcuts import render
+ 
+@@ -12,7 +13,7 @@
+ from .forms import RecipeForm
+ 
+ def home(request):
+-    top_recipes = Recipe.objects.order_by('-likes')[:5]  # Mostra le prime 5 ricette con più mi piace
++    top_recipes = Recipe.objects.annotate(like_count=Count('liked_by')).order_by('-like_count')[:5]
+ 
+     context = {
+         'top_recipes': top_recipes,
+@@ -47,19 +48,14 @@
+ 
+ @login_required
+ def profile(request):
+-    user = request.user
+-    liked_recipes = user.liked_recipes.all()
+-    context = {
+-        'liked_recipes': liked_recipes,
+-    }
+-    return render(request, 'recipes/profile.html', context)
++    user_recipes = Recipe.objects.filter(author=request.user)
++    favorite_recipes = request.user.liked_recipes.all()
++    return render(request, 'recipes/profile.html', {
++        'recipes': user_recipes,
++        'favorite_recipes': favorite_recipes,
++    })
+ 
+ 
+-@login_required
+-def favorite_recipes(request):
+-    user = request.user
+-    liked_recipes = user.liked_recipes.all()
+-    return render(request, 'recipes/favorite_recipes.html', {'liked_recipes': liked_recipes})
+ def login_and_registration(request):
+     if request.user.is_authenticated:
+         return redirect('home')  # Reindirizza alla home se l'utente è già autenticato
+@@ -89,7 +85,6 @@
+     logout(request)
+     return redirect('home')
+ 
+-# recipes/views.py
+ 
+ from django.shortcuts import render, get_object_or_404
+ from .models import Recipe
+@@ -153,8 +148,28 @@
+     return redirect('recipe_detail', pk=recipe_id)
+ 
+ 
++def add_to_favorites(request, pk):
++    recipe = get_object_or_404(Recipe, pk=pk)
++    if recipe.liked_by.filter(id=request.user.id).exists():
++        recipe.liked_by.remove(request.user)
++        recipe.favorites_count -= 1
++    else:
++        recipe.liked_by.add(request.user)
++        recipe.favorites_count += 1
++    recipe.save()
++    return redirect('recipe_detail', pk=pk)
++
++@login_required
++def toggle_favorite(request, pk):
++    recipe = get_object_or_404(Recipe, pk=pk)
++    if request.user in recipe.liked_by.all():
++        recipe.liked_by.remove(request.user)
++    else:
++        recipe.liked_by.add(request.user)
++    return redirect('recipe_detail', pk=pk)
++
++
++@login_required
+ def favorite_recipes(request):
+-    user = request.user
+-    favorite_recipes = user.favorite_recipes.all()
+-    return render(request, 'recipes/favorite_recipes.html', {'recipes': favorite_recipes})
+-
++    recipes = request.user.liked_recipes.all()
++    return render(request, 'recipes/favorite_recipes.html', {'recipes': recipes})
+\ No newline at end of file
+Index: recipes/templates/recipes/recipe_detail.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><!-- recipes/templates/recipes/recipe_detail.html -->\r\n\r\n{% extends 'base_generic.html' %}\r\n\r\n{% block title %}{{ recipe.title }}{% endblock %}\r\n\r\n{% block content %}\r\n<div class=\"container\">\r\n    <div class=\"recipe-detail\">\r\n        <h1>{{ recipe.title }}</h1>\r\n        <p><img src=\"https://placehold.co/600x400\" alt=\"{{ recipe.title }}\"></p>\r\n        <p><strong>Descrizione:</strong> {{ recipe.description }}</p>\r\n        <p><strong>Ingredienti:</strong> {{ recipe.ingredients }}</p>\r\n        <p><strong>Istruzioni:</strong> {{ recipe.instructions }}</p>\r\n        <form action=\"{% url 'recipe_detail' recipe.id %}\" method=\"post\">\r\n        {% csrf_token %}\r\n        <button type=\"submit\" class=\"like-btn\">\r\n          {% if request.user in recipe.likes.all %}\r\n            Unlike\r\n          {% else %}\r\n            Like\r\n          {% endif %}\r\n        </button>\r\n      </form>\r\n        <form action=\"{% url 'home' %}\" method=\"get\">\r\n            <button type=\"submit\" class=\"btn\">Torna alla Home</button>\r\n        </form>\r\n    </div>\r\n</div>\r\n{% endblock %}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/recipes/templates/recipes/recipe_detail.html b/recipes/templates/recipes/recipe_detail.html
+--- a/recipes/templates/recipes/recipe_detail.html	(revision 7045056bd4da926341948bff3c8921f88afe9592)
++++ b/recipes/templates/recipes/recipe_detail.html	(date 1718894459536)
+@@ -12,16 +12,22 @@
+         <p><strong>Descrizione:</strong> {{ recipe.description }}</p>
+         <p><strong>Ingredienti:</strong> {{ recipe.ingredients }}</p>
+         <p><strong>Istruzioni:</strong> {{ recipe.instructions }}</p>
+-        <form action="{% url 'recipe_detail' recipe.id %}" method="post">
+-        {% csrf_token %}
+-        <button type="submit" class="like-btn">
+-          {% if request.user in recipe.likes.all %}
+-            Unlike
+-          {% else %}
+-            Like
+-          {% endif %}
+-        </button>
+-      </form>
++        <p><strong>Tempo di preparazione:</strong> {{ recipe.prep_time }}</p>
++        <p><strong>Tempo di Cottura</strong> {{ recipe.cook_time }}</p>
++
++        <form action="{% url 'toggle_favorite' pk=recipe.pk %}" method="post">
++      {% csrf_token %}
++      <button type="submit" class="like-btn">
++        {% if user in recipe.liked_by.all %}
++          Rimuovi dai Preferiti
++        {% else %}
++          Aggiungi ai Preferiti
++        {% endif %}
++      </button>
++    </form>
++
++    <p>Mi piace: {{ recipe.liked_by.count }}</p>
++
+         <form action="{% url 'home' %}" method="get">
+             <button type="submit" class="btn">Torna alla Home</button>
+         </form>
+Index: recipes/templates/recipes/home.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><!-- recipes/templates/recipes/home.html -->\r\n{% extends 'base_generic.html' %}\r\n{% load static %}\r\n{% block title %}Home - Recipe Sharing Site{% endblock %}\r\n\r\n{% block content %}\r\n  <h2>Top Recipes</h2>\r\n  {% if top_recipes %}\r\n    <div class=\"top-recipes-container\">\r\n      {% for recipe in top_recipes %}\r\n        <div class=\"top-recipe-box\">\r\n    <img src=\"https://placehold.co/600x400\" alt=\"{{ recipe.title }}\">\r\n    <h3><a href=\"{% url 'recipe_detail' recipe.id %}\">{{ recipe.title }}</a></h3>\r\n    <p>{{ recipe.description }}</p>\r\n    <div class=\"recipe-meta\">\r\n        <span>Author: {{ recipe.author.username }}</span>\r\n        <span>Likes: {{ recipe.likes }}</span>\r\n        <button class=\"like-btn\" onclick=\"likeRecipe({{ recipe.id }})\">Like</button>\r\n    </div>\r\n</div>\r\n      {% endfor %}\r\n    </div>\r\n  {% else %}\r\n    <p>No recipes found.</p>\r\n  {% endif %}\r\n{% endblock %}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/recipes/templates/recipes/home.html b/recipes/templates/recipes/home.html
+--- a/recipes/templates/recipes/home.html	(revision 7045056bd4da926341948bff3c8921f88afe9592)
++++ b/recipes/templates/recipes/home.html	(date 1718895279317)
+@@ -10,12 +10,11 @@
+       {% for recipe in top_recipes %}
+         <div class="top-recipe-box">
+     <img src="https://placehold.co/600x400" alt="{{ recipe.title }}">
+-    <h3><a href="{% url 'recipe_detail' recipe.id %}">{{ recipe.title }}</a></h3>
++    <h3><a href="{% url 'recipe_detail' pk=recipe.pk %}">{{ recipe.title }}</a></h3>
+     <p>{{ recipe.description }}</p>
+     <div class="recipe-meta">
+         <span>Author: {{ recipe.author.username }}</span>
+-        <span>Likes: {{ recipe.likes }}</span>
+-        <button class="like-btn" onclick="likeRecipe({{ recipe.id }})">Like</button>
++        <span>Likes: {{ recipe.like_count }}</span>
+     </div>
+ </div>
+       {% endfor %}
+Index: recipes/urls.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+># recipes/urls.py\r\nfrom django.urls import path\r\nfrom . import views\r\n\r\nurlpatterns = [\r\n    path('', views.home, name='home'),\r\n    path('search/', views.search_recipes, name='search_recipes'),\r\n    path('create/', views.create_recipe, name='create_recipe'),\r\n    path('profile/', views.profile, name='profile'),\r\n    path('login_and_registration/', views.login_and_registration, name='login_and_registration'),\r\n    path('logout/', views.logout_view, name='logout'),\r\n    path('edit/<int:pk>/', views.edit_recipe, name='edit_recipe'),\r\n    path('recipe/<int:pk>/', views.recipe_detail, name='recipe_detail'),\r\n    path('recipe/<int:pk>/like/', views.like_recipe, name='like_recipe'),\r\n    path('favorite_recipes/', views.favorite_recipes, name='favorite_recipes'),\r\n    path('recipe/delete/<int:recipe_id>/', views.recipe_delete, name='recipe_delete'),\r\n]
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/recipes/urls.py b/recipes/urls.py
+--- a/recipes/urls.py	(revision 7045056bd4da926341948bff3c8921f88afe9592)
++++ b/recipes/urls.py	(date 1718894729348)
+@@ -12,6 +12,7 @@
+     path('edit/<int:pk>/', views.edit_recipe, name='edit_recipe'),
+     path('recipe/<int:pk>/', views.recipe_detail, name='recipe_detail'),
+     path('recipe/<int:pk>/like/', views.like_recipe, name='like_recipe'),
+-    path('favorite_recipes/', views.favorite_recipes, name='favorite_recipes'),
++    path('favorites/', views.favorite_recipes, name='favorite_recipes'),
++    path('recipe/<int:pk>/favorite/', views.toggle_favorite, name='toggle_favorite'),
+     path('recipe/delete/<int:recipe_id>/', views.recipe_delete, name='recipe_delete'),
+ ]
+\ No newline at end of file
+Index: recipes/templates/base_generic.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><!-- recipes/templates/base_generic.html -->\r\n<!DOCTYPE html>\r\n<html lang=\"en\">\r\n{% load static %}\r\n<head>\r\n    <meta charset=\"UTF-8\">\r\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\r\n    <title>{% block title %}Recipe Sharing Site{% endblock %}</title>\r\n    <script src=\"{% static 'js/favorites.js' %}\"></script>\r\n    <link rel=\"stylesheet\" href=\"{% static 'css/styles.css' %}\">\r\n</head>\r\n\r\n<body>\r\n    <header>\r\n        <nav class=\"navbar\">\r\n            <div class=\"container\">\r\n                <a href=\"{% url 'home' %}\" class=\"logo\">Recipe Sharing Site</a>\r\n                <form action=\"{% url 'search_recipes' %}\" method=\"get\" class=\"search-form\">\r\n                    <input type=\"text\" name=\"query\" placeholder=\"Cerca ricette...\">\r\n                    <button type=\"submit\">Cerca</button>\r\n                </form>\r\n                <ul class=\"nav-menu\">\r\n                <li><a href=\"{% url 'home' %}\">Home</a></li>\r\n                <li><a href=\"{% url 'create_recipe' %}\">Create Recipe</a></li>\r\n                {% if user.is_authenticated %}\r\n                    <li><a href=\"{% url 'profile' %}\">Profile</a></li>\r\n                    <li><a href=\"{% url 'favorite_recipes' %}\">Favorite Recipes</a></li>\r\n                    <li><span>Welcome, {{ user.username }}</span></li>\r\n                    <li><a href=\"{% url 'logout' %}\">Logout</a></li>\r\n                {% else %}\r\n                    <li><a href=\"{% url 'login_and_registration' %}\">Login/Register</a></li>\r\n                {% endif %}\r\n                </ul>\r\n             <ul>\r\n\r\n            </div>\r\n\r\n        </nav>\r\n    </header>\r\n\r\n    <main>\r\n\r\n        <div class=\"container\">\r\n            {% block content %}\r\n            <!-- Questo blocco verrà sovrascritto nei template figlio -->\r\n            {% endblock %}\r\n        </div>\r\n    </main>\r\n\r\n    <footer>\r\n        <div class=\"container\">\r\n            <p>&copy; 2024 Recipe Sharing Site. All rights reserved.</p>\r\n        </div>\r\n    </footer>\r\n</body>\r\n</html>\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/recipes/templates/base_generic.html b/recipes/templates/base_generic.html
+--- a/recipes/templates/base_generic.html	(revision 7045056bd4da926341948bff3c8921f88afe9592)
++++ b/recipes/templates/base_generic.html	(date 1718895951609)
+@@ -6,7 +6,7 @@
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>{% block title %}Recipe Sharing Site{% endblock %}</title>
+-    <script src="{% static 'js/favorites.js' %}"></script>
++
+     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+ </head>
+ 
+@@ -24,7 +24,7 @@
+                 <li><a href="{% url 'create_recipe' %}">Create Recipe</a></li>
+                 {% if user.is_authenticated %}
+                     <li><a href="{% url 'profile' %}">Profile</a></li>
+-                    <li><a href="{% url 'favorite_recipes' %}">Favorite Recipes</a></li>
++
+                     <li><span>Welcome, {{ user.username }}</span></li>
+                     <li><a href="{% url 'logout' %}">Logout</a></li>
+                 {% else %}
+@@ -42,7 +42,7 @@
+ 
+         <div class="container">
+             {% block content %}
+-            <!-- Questo blocco verrà sovrascritto nei template figlio -->
++
+             {% endblock %}
+         </div>
+     </main>
+Index: recipes/templates/recipes/search_results.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>{% extends 'base_generic.html' %}\r\n{% load static %}\r\n{% block content %}\r\n    <h1>Risultati della Ricerca</h1>\r\n    {% if recipes %}\r\n        <ul class=\"list_results\">\r\n            {% for recipe in recipes %}\r\n                <li><a href=\"{% url 'recipe_detail' pk=recipe.pk %}\" >{{ recipe.title }}</a></li>\r\n\r\n            {% endfor %}\r\n        </ul>\r\n    {% else %}\r\n        <p>Nessuna ricetta trovata.</p>\r\n    {% endif %}\r\n{% endblock %}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/recipes/templates/recipes/search_results.html b/recipes/templates/recipes/search_results.html
+--- a/recipes/templates/recipes/search_results.html	(revision 7045056bd4da926341948bff3c8921f88afe9592)
++++ b/recipes/templates/recipes/search_results.html	(date 1718895619375)
+@@ -1,15 +1,23 @@
+ {% extends 'base_generic.html' %}
+ {% load static %}
+ {% block content %}
++<div class="container">
+     <h1>Risultati della Ricerca</h1>
+     {% if recipes %}
+         <ul class="list_results">
+             {% for recipe in recipes %}
+-                <li><a href="{% url 'recipe_detail' pk=recipe.pk %}" >{{ recipe.title }}</a></li>
+-
++                <li class="recipe-item">
++                    <h3><a href="{% url 'recipe_detail' pk=recipe.pk %}">{{ recipe.title }}</a></h3>
++                    <p>{{ recipe.description }}</p>
++                    <div class="recipe-meta">
++                        <span>Autore: {{ recipe.author.username }}</span>
++                        <span>Mi piace: {{ recipe.liked_by.count }}</span>
++                    </div>
++                </li>
+             {% endfor %}
+         </ul>
+     {% else %}
+         <p>Nessuna ricetta trovata.</p>
+     {% endif %}
+-{% endblock %}
+\ No newline at end of file
++</div>
++{% endblock %}
+Index: recipes/templates/recipes/profile.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><!-- recipes/templates/recipes/profile.html -->\r\n{% extends 'base_generic.html' %}\r\n{% block title %}Profile - Recipe Sharing Site{% endblock %}\r\n\r\n{% block content %}\r\n<div class=\"container\">\r\n    <h2>My Recipes</h2>\r\n    {% if recipes %}\r\n        {% for recipe in recipes %}\r\n            <div class=\"profile-recipe-box\">\r\n                <img src=\"https://placehold.co/600x400\" alt=\"{{ recipe.title }}\">\r\n                <h3><a href=\"{% url 'recipe_detail' recipe.id %}\">{{ recipe.title }}</a></h3>\r\n                <p>{{ recipe.description }}</p>\r\n                <div class=\"recipe-meta\">\r\n                    <span>Author: {{ recipe.author.username }}</span>\r\n                    <span>Likes: {{ recipe.likes }}</span>\r\n                    <button class=\"like-btn\" onclick=\"likeRecipe({{ recipe.id }})\">Like</button>\r\n                    {% if request.user == recipe.author %}\r\n                        <a href=\"{% url 'edit_recipe' recipe.id %}\" class=\"edit-button\">\r\n                            <svg class=\"edit-svgIcon\" viewBox=\"0 0 512 512\">\r\n                                <path d=\"M410.3 231l11.3-11.3-33.9-33.9-62.1-62.1L291.7 89.8l-11.3 11.3-22.6 22.6L58.6 322.9c-10.4 10.4-18 23.3-22.2 37.4L1 480.7c-2.5 8.4-.2 17.5 6.1 23.7s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L387.7 253.7 410.3 231zM160 399.4l-9.1 22.7c-4 3.1-8.5 5.4-13.3 6.9L59.4 452l23-78.1c1.4-4.9 3.8-9.4 6.9-13.3l22.7-9.1v32c0 8.8 7.2 16 16 16h32zM362.7 18.7L348.3 33.2 325.7 55.8 314.3 67.1l33.9 33.9 62.1 62.1 33.9 33.9 11.3-11.3 22.6-22.6 14.5-14.5c25-25 25-65.5 0-90.5L453.3 18.7c-25-25-65.5-25-90.5 0zm-47.4 168l-144 144c-6.2 6.2-16.4 6.2-22.6 0s-6.2-16.4 0-22.6l144-144c6.2-6.2 16.4-6.2 22.6 0s6.2 16.4 0 22.6z\"/>\r\n                            </svg>\r\n                        </a>\r\n                             <form action=\"{% url 'recipe_delete' recipe.id %}\" method=\"post\">\r\n                                {% csrf_token %}\r\n                                <button class=\"delete-btn\"><span class=\"text\">Delete Recipe</span><span class=\"icon\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\"><path d=\"M24 20.188l-8.315-8.209 8.2-8.282-3.697-3.697-8.212 8.318-8.31-8.203-3.666 3.666 8.321 8.24-8.206 8.313 3.666 3.666 8.237-8.318 8.285 8.203z\"></path></svg></span></button>\r\n                             </form>\r\n                    {% endif %}\r\n                </div>\r\n            </div>\r\n        {% endfor %}\r\n    {% else %}\r\n        <p>No recipes found.</p>\r\n    {% endif %}\r\n</div>\r\n\r\n{% endblock %}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/recipes/templates/recipes/profile.html b/recipes/templates/recipes/profile.html
+--- a/recipes/templates/recipes/profile.html	(revision 7045056bd4da926341948bff3c8921f88afe9592)
++++ b/recipes/templates/recipes/profile.html	(date 1718895463342)
+@@ -1,10 +1,9 @@
+-<!-- recipes/templates/recipes/profile.html -->
+ {% extends 'base_generic.html' %}
+ {% block title %}Profile - Recipe Sharing Site{% endblock %}
+ 
+ {% block content %}
+ <div class="container">
+-    <h2>My Recipes</h2>
++    <h2>Le mie ricette</h2>
+     {% if recipes %}
+         {% for recipe in recipes %}
+             <div class="profile-recipe-box">
+@@ -12,26 +11,51 @@
+                 <h3><a href="{% url 'recipe_detail' recipe.id %}">{{ recipe.title }}</a></h3>
+                 <p>{{ recipe.description }}</p>
+                 <div class="recipe-meta">
+-                    <span>Author: {{ recipe.author.username }}</span>
+-                    <span>Likes: {{ recipe.likes }}</span>
+-                    <button class="like-btn" onclick="likeRecipe({{ recipe.id }})">Like</button>
++                    <span>Autore: {{ recipe.author.username }}</span>
++                    <span>Mi piace: {{ recipe.liked_by.count }}</span>
++                    <form action="{% url 'toggle_favorite' pk=recipe.id %}" method="post" style="display: inline;">
++                        {% csrf_token %}
++                        <button class="like-btn">
++                            {% if request.user in recipe.liked_by.all %}
++                                Rimuovi dai preferiti
++                            {% else %}
++                                Aggiungi ai preferiti
++                            {% endif %}
++                        </button>
++                    </form>
+                     {% if request.user == recipe.author %}
+                         <a href="{% url 'edit_recipe' recipe.id %}" class="edit-button">
+                             <svg class="edit-svgIcon" viewBox="0 0 512 512">
+                                 <path d="M410.3 231l11.3-11.3-33.9-33.9-62.1-62.1L291.7 89.8l-11.3 11.3-22.6 22.6L58.6 322.9c-10.4 10.4-18 23.3-22.2 37.4L1 480.7c-2.5 8.4-.2 17.5 6.1 23.7s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L387.7 253.7 410.3 231zM160 399.4l-9.1 22.7c-4 3.1-8.5 5.4-13.3 6.9L59.4 452l23-78.1c1.4-4.9 3.8-9.4 6.9-13.3l22.7-9.1v32c0 8.8 7.2 16 16 16h32zM362.7 18.7L348.3 33.2 325.7 55.8 314.3 67.1l33.9 33.9 62.1 62.1 33.9 33.9 11.3-11.3 22.6-22.6 14.5-14.5c25-25 25-65.5 0-90.5L453.3 18.7c-25-25-65.5-25-90.5 0zm-47.4 168l-144 144c-6.2 6.2-16.4 6.2-22.6 0s-6.2-16.4 0-22.6l144-144c6.2-6.2 16.4-6.2 22.6 0s6.2 16.4 0 22.6z"/>
+                             </svg>
+                         </a>
+-                             <form action="{% url 'recipe_delete' recipe.id %}" method="post">
+-                                {% csrf_token %}
+-                                <button class="delete-btn"><span class="text">Delete Recipe</span><span class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M24 20.188l-8.315-8.209 8.2-8.282-3.697-3.697-8.212 8.318-8.31-8.203-3.666 3.666 8.321 8.24-8.206 8.313 3.666 3.666 8.237-8.318 8.285 8.203z"></path></svg></span></button>
+-                             </form>
++                        <form action="{% url 'recipe_delete' recipe.id %}" method="post" style="display: inline;">
++                            {% csrf_token %}
++                            <button class="delete-btn"><span class="text">Elimina Ricetta</span><span class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M24 20.188l-8.315-8.209 8.2-8.282-3.697-3.697-8.212 8.318-8.31-8.203-3.666 3.666 8.321 8.24-8.206 8.313 3.666 3.666 8.237-8.318 8.285 8.203z"></path></svg></span></button>
++                        </form>
+                     {% endif %}
+                 </div>
+             </div>
+         {% endfor %}
+     {% else %}
+-        <p>No recipes found.</p>
++        <p>Non hai ancora creato nessuna ricetta.</p>
++    {% endif %}
++
++    <h2>Le mie ricette preferite</h2>
++    {% if favorite_recipes %}
++        {% for recipe in favorite_recipes %}
++            <div class="profile-recipe-box">
++                <img src="https://placehold.co/600x400" alt="{{ recipe.title }}">
++                <h3><a href="{% url 'recipe_detail' recipe.id %}">{{ recipe.title }}</a></h3>
++                <p>{{ recipe.description }}</p>
++                <div class="recipe-meta">
++                    <span>Autore: {{ recipe.author.username }}</span>
++                    <span>Mi piace: {{ recipe.liked_by.count }}</span>
++                </div>
++            </div>
++        {% endfor %}
++    {% else %}
++        <p>Non hai ancora aggiunto nessuna ricetta ai preferiti.</p>
+     {% endif %}
+ </div>
+-
+-{% endblock %}
+\ No newline at end of file
++{% endblock %}
+Index: recipes/static/js/favorites.js
+===================================================================
+diff --git a/recipes/static/js/favorites.js b/recipes/static/js/favorites.js
+deleted file mode 100644
+--- a/recipes/static/js/favorites.js	(revision 7045056bd4da926341948bff3c8921f88afe9592)
++++ /dev/null	(revision 7045056bd4da926341948bff3c8921f88afe9592)
+@@ -1,20 +0,0 @@
+-// static/js/favorites.js
+-
+-// Aggiungi o rimuovi ricetta dai preferiti
+-function toggleFavorite(recipeId) {
+-    fetch(`/toggle_favorite/${recipeId}/`)
+-        .then(response => response.json())
+-        .then(data => {
+-            if (data.is_favorite) {
+-                // Ricetta aggiunta ai preferiti, aggiorna interfaccia utente
+-                alert('Ricetta aggiunta ai preferiti!');
+-            } else {
+-                // Ricetta rimossa dai preferiti, aggiorna interfaccia utente
+-                alert('Ricetta rimossa dai preferiti.');
+-            }
+-            // Puoi aggiornare dinamicamente l'interfaccia utente qui se necessario
+-        })
+-        .catch(error => {
+-            console.error('Errore durante il toggle dei preferiti:', error);
+-        });
+-}
+Index: recipes/migrations/0007_rename_likes_recipe_liked_by.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/recipes/migrations/0007_rename_likes_recipe_liked_by.py b/recipes/migrations/0007_rename_likes_recipe_liked_by.py
+new file mode 100644
+--- /dev/null	(date 1718892794780)
++++ b/recipes/migrations/0007_rename_likes_recipe_liked_by.py	(date 1718892794780)
+@@ -0,0 +1,18 @@
++# Generated by Django 5.0.6 on 2024-06-20 14:13
++
++from django.db import migrations
++
++
++class Migration(migrations.Migration):
++
++    dependencies = [
++        ('recipes', '0006_remove_recipe_favorites'),
++    ]
++
++    operations = [
++        migrations.RenameField(
++            model_name='recipe',
++            old_name='likes',
++            new_name='liked_by',
++        ),
++    ]
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"AutoImportSettings\">\r\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"204ac7ba-c0de-494a-8d1f-b2ca19b5de86\" name=\"Changes\" comment=\"Commit\">\r\n      <change afterPath=\"$PROJECT_DIR$/recipes/migrations/0003_remove_recipe_favorites_count_recipe_likes.py\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/recipes/migrations/0004_recipe_favorites.py\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/recipes/migrations/0005_remove_recipe_likes_recipe_likes.py\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/recipes/migrations/0006_remove_recipe_favorites.py\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/recipes/static/js/favorites.js\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/recipes/templates/recipes/favorite_recipes.html\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/recipes/templates/recipes/recipe_confirm_delete.html\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/db.sqlite3\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/db.sqlite3\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/recipes/models.py\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/recipes/models.py\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/recipes/static/css/styles.css\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/recipes/static/css/styles.css\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/recipes/templates/base_generic.html\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/recipes/templates/base_generic.html\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/recipes/templates/favorite_recipe.html\" beforeDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/recipes/templates/recipes/home.html\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/recipes/templates/recipes/home.html\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/recipes/templates/recipes/profile.html\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/recipes/templates/recipes/profile.html\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/recipes/templates/recipes/recipe_detail.html\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/recipes/templates/recipes/recipe_detail.html\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/recipes/templates/recipes/search_results.html\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/recipes/templates/recipes/search_results.html\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/recipes/urls.py\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/recipes/urls.py\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/recipes/views.py\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/recipes/views.py\" afterDir=\"false\" />\r\n    </list>\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"DjangoConsoleOptions\" custom-start-script=\"import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)\">\r\n    <option name=\"myCustomStartScript\" value=\"import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)\" />\r\n  </component>\r\n  <component name=\"FileTemplateManagerImpl\">\r\n    <option name=\"RECENT_TEMPLATES\">\r\n      <list>\r\n        <option value=\"Python Script\" />\r\n        <option value=\"CSS File\" />\r\n        <option value=\"JavaScript File\" />\r\n        <option value=\"HTML File\" />\r\n      </list>\r\n    </option>\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"RECENT_BRANCH_BY_REPOSITORY\">\r\n      <map>\r\n        <entry key=\"$PROJECT_DIR$\" value=\"master\" />\r\n      </map>\r\n    </option>\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\r\n  </component>\r\n  <component name=\"GitHubPullRequestSearchHistory\">{\r\n  &quot;lastFilter&quot;: {\r\n    &quot;state&quot;: &quot;OPEN&quot;,\r\n    &quot;assignee&quot;: &quot;GabAttu&quot;\r\n  }\r\n}</component>\r\n  <component name=\"GithubPullRequestsUISettings\">{\r\n  &quot;selectedUrlAndAccountId&quot;: {\r\n    &quot;url&quot;: &quot;https://github.com/GabAttu/backend&quot;,\r\n    &quot;accountId&quot;: &quot;e7c49b1f-8115-47b6-8c37-c1500d1a33e2&quot;\r\n  }\r\n}</component>\r\n  <component name=\"ProjectColorInfo\">{\r\n  &quot;associatedIndex&quot;: 0\r\n}</component>\r\n  <component name=\"ProjectId\" id=\"2i02Eiwd7Tff1d106wdDTPXdQw5\" />\r\n  <component name=\"ProjectLevelVcsManager\" settingsEditedManually=\"true\" />\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\">{\r\n  &quot;keyToString&quot;: {\r\n    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,\r\n    &quot;RunOnceActivity.OpenDjangoStructureViewOnStart&quot;: &quot;true&quot;,\r\n    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,\r\n    &quot;git-widget-placeholder&quot;: &quot;master&quot;,\r\n    &quot;list.type.of.created.stylesheet&quot;: &quot;CSS&quot;,\r\n    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,\r\n    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,\r\n    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,\r\n    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,\r\n    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,\r\n    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;\r\n  }\r\n}</component>\r\n  <component name=\"RecentsManager\">\r\n    <key name=\"MoveFile.RECENT_KEYS\">\r\n      <recent name=\"C:\\Users\\Gabriele\\ProjectRecipe\\ProjectRecipe\\recipes\\templates\\recipes\" />\r\n    </key>\r\n  </component>\r\n  <component name=\"RunManager\">\r\n    <configuration name=\"ProjectRecipe\" type=\"Python.DjangoServer\" factoryName=\"Django server\">\r\n      <module name=\"ProjectRecipe\" />\r\n      <option name=\"ENV_FILES\" value=\"\" />\r\n      <option name=\"INTERPRETER_OPTIONS\" value=\"\" />\r\n      <option name=\"PARENT_ENVS\" value=\"true\" />\r\n      <envs>\r\n        <env name=\"PYTHONUNBUFFERED\" value=\"1\" />\r\n      </envs>\r\n      <option name=\"SDK_HOME\" value=\"\" />\r\n      <option name=\"WORKING_DIRECTORY\" value=\"\" />\r\n      <option name=\"IS_MODULE_SDK\" value=\"false\" />\r\n      <option name=\"ADD_CONTENT_ROOTS\" value=\"true\" />\r\n      <option name=\"ADD_SOURCE_ROOTS\" value=\"true\" />\r\n      <option name=\"launchJavascriptDebuger\" value=\"false\" />\r\n      <option name=\"port\" value=\"8000\" />\r\n      <option name=\"host\" value=\"localhost\" />\r\n      <option name=\"additionalOptions\" value=\"\" />\r\n      <option name=\"browserUrl\" value=\"\" />\r\n      <option name=\"runTestServer\" value=\"false\" />\r\n      <option name=\"runNoReload\" value=\"false\" />\r\n      <option name=\"useCustomRunCommand\" value=\"false\" />\r\n      <option name=\"customRunCommand\" value=\"\" />\r\n      <method v=\"2\" />\r\n    </configuration>\r\n  </component>\r\n  <component name=\"SharedIndexes\">\r\n    <attachedChunks>\r\n      <set>\r\n        <option value=\"bundled-js-predefined-1d06a55b98c1-0b3e54e931b4-JavaScript-PY-241.17890.14\" />\r\n        <option value=\"bundled-python-sdk-5b207ade9991-7e9c3bbb6e34-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-241.17890.14\" />\r\n      </set>\r\n    </attachedChunks>\r\n  </component>\r\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"204ac7ba-c0de-494a-8d1f-b2ca19b5de86\" name=\"Changes\" comment=\"\" />\r\n      <created>1718613063389</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1718613063389</updated>\r\n      <workItem from=\"1718613064811\" duration=\"6011000\" />\r\n      <workItem from=\"1718619353979\" duration=\"372000\" />\r\n      <workItem from=\"1718703092422\" duration=\"3176000\" />\r\n      <workItem from=\"1718706483512\" duration=\"49000\" />\r\n      <workItem from=\"1718706659445\" duration=\"58000\" />\r\n      <workItem from=\"1718737790245\" duration=\"4504000\" />\r\n      <workItem from=\"1718780905168\" duration=\"10822000\" />\r\n    </task>\r\n    <task id=\"LOCAL-00001\" summary=\"Commit\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1718619078444</created>\r\n      <option name=\"number\" value=\"00001\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1718619078444</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00002\" summary=\"Commit\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1718619083877</created>\r\n      <option name=\"number\" value=\"00002\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00002\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1718619083877</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00003\" summary=\"Commit\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1718705544983</created>\r\n      <option name=\"number\" value=\"00003\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00003\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1718705544983</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00004\" summary=\"Commit\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1718705585118</created>\r\n      <option name=\"number\" value=\"00004\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00004\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1718705585118</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00005\" summary=\"Commit\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1718706268099</created>\r\n      <option name=\"number\" value=\"00005\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00005\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1718706268099</updated>\r\n    </task>\r\n    <option name=\"localTasksCounter\" value=\"6\" />\r\n    <servers />\r\n  </component>\r\n  <component name=\"TypeScriptGeneratedFilesManager\">\r\n    <option name=\"version\" value=\"3\" />\r\n  </component>\r\n  <component name=\"Vcs.Log.Tabs.Properties\">\r\n    <option name=\"TAB_STATES\">\r\n      <map>\r\n        <entry key=\"MAIN\">\r\n          <value>\r\n            <State />\r\n          </value>\r\n        </entry>\r\n      </map>\r\n    </option>\r\n  </component>\r\n  <component name=\"VcsManagerConfiguration\">\r\n    <MESSAGE value=\"Commit\" />\r\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"Commit\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision 7045056bd4da926341948bff3c8921f88afe9592)
++++ b/.idea/workspace.xml	(date 1718895933594)
+@@ -5,19 +5,12 @@
+   </component>
+   <component name="ChangeListManager">
+     <list default="true" id="204ac7ba-c0de-494a-8d1f-b2ca19b5de86" name="Changes" comment="Commit">
+-      <change afterPath="$PROJECT_DIR$/recipes/migrations/0003_remove_recipe_favorites_count_recipe_likes.py" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/recipes/migrations/0004_recipe_favorites.py" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/recipes/migrations/0005_remove_recipe_likes_recipe_likes.py" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/recipes/migrations/0006_remove_recipe_favorites.py" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/recipes/static/js/favorites.js" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/recipes/templates/recipes/favorite_recipes.html" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/recipes/templates/recipes/recipe_confirm_delete.html" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/recipes/migrations/0007_rename_likes_recipe_liked_by.py" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/recipes/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/recipes/models.py" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/recipes/static/css/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/recipes/static/css/styles.css" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/recipes/templates/base_generic.html" beforeDir="false" afterPath="$PROJECT_DIR$/recipes/templates/base_generic.html" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/recipes/templates/favorite_recipe.html" beforeDir="false" />
++      <change beforePath="$PROJECT_DIR$/recipes/templates/recipes/favorite_recipes.html" beforeDir="false" afterPath="$PROJECT_DIR$/recipes/templates/recipes/favorite_recipes.html" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/recipes/templates/recipes/home.html" beforeDir="false" afterPath="$PROJECT_DIR$/recipes/templates/recipes/home.html" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/recipes/templates/recipes/profile.html" beforeDir="false" afterPath="$PROJECT_DIR$/recipes/templates/recipes/profile.html" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/recipes/templates/recipes/recipe_detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/recipes/templates/recipes/recipe_detail.html" afterDir="false" />
+@@ -140,7 +133,8 @@
+       <workItem from="1718706483512" duration="49000" />
+       <workItem from="1718706659445" duration="58000" />
+       <workItem from="1718737790245" duration="4504000" />
+-      <workItem from="1718780905168" duration="10822000" />
++      <workItem from="1718780905168" duration="10847000" />
++      <workItem from="1718891926403" duration="4003000" />
+     </task>
+     <task id="LOCAL-00001" summary="Commit">
+       <option name="closed" value="true" />
+@@ -182,7 +176,15 @@
+       <option name="project" value="LOCAL" />
+       <updated>1718706268099</updated>
+     </task>
+-    <option name="localTasksCounter" value="6" />
++    <task id="LOCAL-00006" summary="Commit">
++      <option name="closed" value="true" />
++      <created>1718791850074</created>
++      <option name="number" value="00006" />
++      <option name="presentableId" value="LOCAL-00006" />
++      <option name="project" value="LOCAL" />
++      <updated>1718791850074</updated>
++    </task>
++    <option name="localTasksCounter" value="7" />
+     <servers />
+   </component>
+   <component name="TypeScriptGeneratedFilesManager">
