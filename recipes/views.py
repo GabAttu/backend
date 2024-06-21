@@ -63,6 +63,8 @@ def login_and_registration(request):
 
     if request.method == 'POST':
         login_form = LoginForm(request.POST)
+        registration_form = RegistrationForm(request.POST)
+        print("POST request received for login or registration...")
         if login_form.is_valid():
             username = login_form.cleaned_data['username']
             password = login_form.cleaned_data['password']

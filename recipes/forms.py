@@ -20,10 +20,12 @@ class RegistrationForm(forms.ModelForm):
         fields = ['username', 'password']
 
     def save(self, commit=True):
+        print("Saving user registration...")
         user = super(RegistrationForm, self).save(commit=False)
         user.set_password(self.cleaned_data['password'])
         if commit:
             user.save()
+            print("User saved successfully!")
         return user
 
 class LoginForm(forms.Form):
