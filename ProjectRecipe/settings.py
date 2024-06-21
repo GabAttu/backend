@@ -27,6 +27,10 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['web-production-dd25.up.railway.app']
 
+CSRF_TRUSTED_ORIGINS = [
+    'web-production-dd25.up.railway.app',
+]
+
 
 # Application definition
 
@@ -48,6 +52,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    
 ]
 
 ROOT_URLCONF = 'ProjectRecipe.urls'
