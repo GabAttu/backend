@@ -1,18 +1,15 @@
 from django import forms
 from .models import Recipe
+from django import forms
+from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
+import re
 
 class RecipeForm(forms.ModelForm):
     class Meta:
         model = Recipe
         fields = ['title', 'description', 'ingredients', 'instructions', 'prep_time', 'cook_time']
 
-
-# recipes/forms.py
-
-from django import forms
-from django.contrib.auth.models import User
-from django.core.exceptions import ValidationError
-import re
 
 class RegistrationForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput)

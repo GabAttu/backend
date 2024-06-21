@@ -1,8 +1,5 @@
 from django.db.models import Count
 from django.http import HttpResponseForbidden
-from django.shortcuts import render
-
-# Create your views here.
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import Recipe

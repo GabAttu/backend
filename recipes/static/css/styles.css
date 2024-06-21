@@ -158,18 +158,18 @@ footer {
     background-color: #0056b3;
 }
 
-/* Stile per il link del nome della ricetta nel profilo privato */
+
 .recipe-box h3 a.recipe-link {
-    color: #333;  /* Colore del testo del link */
-    text-decoration: none;  /* Rimuove il sottolineato */
-    cursor: pointer;  /* Mostra il cursore come puntatore al passaggio */
+    color: #333;
+    text-decoration: none;
+    cursor: pointer;
 }
 
 .recipe-box h3 a.recipe-link:hover {
-    text-decoration: underline;  /* Sottolinea il link al passaggio del mouse */
+    text-decoration: underline;
 }
 
-/* Styles for Top Recipe Boxes */
+
 .top-recipe-box {
     border: 1px solid #ddd;
     padding: 20px;
@@ -229,7 +229,6 @@ footer {
     background-color: #0056b3;
 }
 
-/* Nuovi stili per le ricette nel profilo personale */
 .profile-recipe-box {
     border: 1px solid #ddd;
     padding: 20px;
@@ -289,11 +288,6 @@ footer {
     background-color: #0056b3;
 }
 
-/* styles.css */
-
-/* Altri stili esistenti */
-
-/* Styles for Recipe Detail Page */
 .recipe-detail {
     background-color: #fff;
     border: 1px solid #ddd;
@@ -353,7 +347,6 @@ footer {
 }
 
 
-/* Pulsante di cancellazione */
 .delete-btn {
     width: 150px;
     height: 50px;
@@ -369,7 +362,7 @@ footer {
     text-decoration: none;
     color: white;
     text-align: center;
-    line-height: 50px; /* Altezza del pulsante centrata verticalmente */
+    line-height: 50px;
 }
 
 .delete-btn:hover {
@@ -420,7 +413,6 @@ footer {
     outline: none;
 }
 
-/* styles.css */
 
 .edit-button {
     width: 40px;
@@ -473,19 +465,19 @@ footer {
     content: "Edit";
     color: white;
     transition-duration: 0.3s;
-    font-size: 12px; /* Modifica la dimensione del testo se necessario */
+    font-size: 12px;
 }
 
 .edit-button:hover::before {
     display: block;
     padding-left: 10px;
-    font-size: 12px; /* Modifica la dimensione del testo se necessario */
+    font-size: 12px;
     opacity: 1;
     transform: translateY(0px);
     transition-duration: 0.3s;
 }
 
-/* static/css/forms.css */
+
 form {
     margin: 20px 0;
     padding: 20px;
