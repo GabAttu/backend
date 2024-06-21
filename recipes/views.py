@@ -61,21 +61,32 @@ def login_and_registration(request):
     if request.user.is_authenticated:
         return redirect('home')  # Reindirizza alla home se l'utente è già autenticato
 
-    if request.method == 'POST':
-        login_form = LoginForm(request.POST)
-        registration_form = RegistrationForm(request.POST)
-        print("POST request received for login or registration...")
-        if login_form.is_valid():
-            username = login_form.cleaned_data['username']
-            password = login_form.cleaned_data['password']
-            user = authenticate(username=username, password=password)
-            if user is not None:
-                login(request, user)
-                return redirect('home')  # Reindirizza alla home dopo il login
-    else:
-        login_form = LoginForm()
-
+    login_form = LoginForm()
     registration_form = RegistrationForm()
+
+    if request.method == 'POST':
+        if 'login' in request.POST:
+            login_form = LoginForm(request.POST)
+            if login_form.is_valid():
+                username = login_form.cleaned_data['username']
+                password = login_form.cleaned_data['password']
+                user = authenticate(username=username, password=password)
+                if user is not None:
+                    login(request, user)
+                    return redirect('home')  # Reindirizza alla home dopo il login
+                else:
+                    login_form.add_error(None, "Invalid username or password")
+
+        elif 'register' in request.POST:
+            registration_form = RegistrationForm(request.POST)
+            if registration_form.is_valid():
+                registration_form.save()
+                username = registration_form.cleaned_data['username']
+                password = registration_form.cleaned_data['password']
+                user = authenticate(username=username, password=password)
+                if user is not None:
+                    login(request, user)
+                    return redirect('home')  # Reindirizza alla home dopo la registrazione
 
     context = {
         'login_form': login_form,

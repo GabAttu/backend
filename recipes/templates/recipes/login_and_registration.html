@@ -1,23 +1,28 @@
 <!-- recipes/templates/recipes/login_and_registration.html -->
-{% extends 'base_generic.html' %}
-
-{% block title %}Login or Register - Recipe Sharing Site{% endblock %}
+{% extends "base_generic.html" %}
+{% load static %}
+{% block title %}Login e Registrazione{% endblock %}
 
 {% block content %}
-  <h2>Login or Register</h2>
+<div class="container">
+    <h1>Login e Registrazione</h1>
 
-  <!-- Form di Login -->
-  <form method="post" action="{% url 'login' %}">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Login</button>
-  </form>
+    <div class="form-container">
+        <h2>Login</h2>
+        <form method="post" action="{% url 'login_and_registration' %}">
+            {% csrf_token %}
+            {{ login_form.as_p }}
+            <button type="submit" name="login">Login</button>
+        </form>
+    </div>
 
-  <!-- Form di Registrazione -->
-  <h3>Register a New Account</h3>
-  <form method="post" action="{% url 'login_and_registration' %}">
-    {% csrf_token %}
-    {{ registration_form.as_p }}
-    <button type="submit">Register</button>
-  </form>
+    <div class="form-container">
+        <h2>Registrazione</h2>
+        <form method="post" action="{% url 'login_and_registration' %}">
+            {% csrf_token %}
+            {{ registration_form.as_p }}
+            <button type="submit" name="register">Register</button>
+        </form>
+    </div>
+</div>
 {% endblock %}
