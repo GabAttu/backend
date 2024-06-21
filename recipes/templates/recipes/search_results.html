@@ -1,23 +1,32 @@
 {% extends 'base_generic.html' %}
-{% load static %}
+
+{% block title %}Search Results{% endblock %}
+
 {% block content %}
 <div class="container">
-    <h1>Risultati della Ricerca</h1>
-    {% if recipes %}
-        <ul class="list_results">
+    <h2>Search Results</h2>
+    {% if query %}
+        <p>Results for "{{ query }}":</p>
+        {% if recipes %}
+            <div class="row">
             {% for recipe in recipes %}
-                <li class="recipe-item">
-                    <h3><a href="{% url 'recipe_detail' pk=recipe.pk %}">{{ recipe.title }}</a></h3>
+                <div class="profile-recipe-box">
+                    <img src="https://placehold.co/600x400" alt="{{ recipe.title }}">
+                    <h3><a href="{% url 'recipe_detail' recipe.id %}">{{ recipe.title }}</a></h3>
                     <p>{{ recipe.description }}</p>
                     <div class="recipe-meta">
-                        <span>Autore: {{ recipe.author.username }}</span>
-                        <span>Mi piace: {{ recipe.liked_by.count }}</span>
+                        <span>Author: {{ recipe.author.username }}</span>
+                        <span>Likes: {{ recipe.likes.count }}</span>
+                        <button class="like-btn" onclick="likeRecipe({{ recipe.id }})">Like</button>
                     </div>
-                </li>
+                </div>
             {% endfor %}
-        </ul>
+            </div>
+        {% else %}
+            <p>No recipes found matching your query.</p>
+        {% endif %}
     {% else %}
-        <p>Nessuna ricetta trovata.</p>
+        <p>Please enter a search query.</p>
     {% endif %}
 </div>
 {% endblock %}
